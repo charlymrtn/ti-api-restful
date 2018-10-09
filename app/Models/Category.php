@@ -1,19 +1,18 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 
-class User extends Authenticatable
+class Category extends Model
 {
-    use Notifiable, SoftDeletes;
+    //
+    use SoftDeletes;
 
     // Nombre de la tabla
-    protected $table = 'users';
+    protected $table = 'products';
 
     /**
      * Se elimina autoincrementable
@@ -29,7 +28,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'uuid','name', 'email', 'password',
+        'uuid'
     ];
 
     /**
@@ -38,10 +37,11 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'deleted_at'
+        'deleted_at'
     ];
 
     protected $dates = ['created_at','updated_at','deleted_at'];
+
 
     /**
      *  Setup model event hooks
@@ -56,14 +56,8 @@ class User extends Authenticatable
         });
     }
 
-
     public function products()
     {
-        return $this->hasMany('App\Models\Product', 'user_uuid', 'uuid');
-    }
-
-    public function transactions()
-    {
-        return $this->hasMany('App\Models\Transaction', 'user_uuid', 'uuid');
+        return $this->hasMany('App\Models\Product', 'category_uuid', 'uuid');
     }
 }
